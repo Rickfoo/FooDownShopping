@@ -3,5 +3,18 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    //script(src='lib/jquery/jquery-1.7.1.min.js')
   body
-    block content
+    header
+      h1 Foo Down Shopping List
+    nav
+      a(href='index.html') Home
+      a(href='/about/') About
+      a(href='/shopping/') Shopping
+      a(href='/login/') Login
+    .sidebar
+        block sidebar
+    .container
+       .main-content
+          block content
+

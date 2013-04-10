@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 02, 2013 at 04:31 PM
+-- Generation Time: Apr 10, 2013 at 10:22 AM
 -- Server version: 5.5.21
 -- PHP Version: 5.3.15
 
@@ -26,16 +26,15 @@ SET time_zone = "+00:00";
 -- Table structure for table `item_master`
 --
 
-DROP TABLE IF EXISTS `item_master`;
 CREATE TABLE IF NOT EXISTS `item_master` (
   `item_id` int(11) NOT NULL AUTO_INCREMENT,
   `item_desc` varchar(255) NOT NULL,
   `location_id` int(11) NOT NULL,
   `item_aisle` varchar(150) NOT NULL,
-  `item_price` int(11) NOT NULL,
+  `item_price` decimal(11,2) NOT NULL,
   `item_photo` varchar(255) NOT NULL,
   PRIMARY KEY (`item_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
 
 -- --------------------------------------------------------
 
@@ -43,7 +42,6 @@ CREATE TABLE IF NOT EXISTS `item_master` (
 -- Table structure for table `shopping_list`
 --
 
-DROP TABLE IF EXISTS `shopping_list`;
 CREATE TABLE IF NOT EXISTS `shopping_list` (
   `shopping_id` int(11) NOT NULL AUTO_INCREMENT,
   `shopping_list_id` int(11) NOT NULL,
@@ -62,7 +60,6 @@ CREATE TABLE IF NOT EXISTS `shopping_list` (
 -- Table structure for table `shopping_list_master`
 --
 
-DROP TABLE IF EXISTS `shopping_list_master`;
 CREATE TABLE IF NOT EXISTS `shopping_list_master` (
   `shopping_ist_id` int(11) NOT NULL AUTO_INCREMENT,
   `shopping_list_desc` varchar(255) NOT NULL,
@@ -77,7 +74,6 @@ CREATE TABLE IF NOT EXISTS `shopping_list_master` (
 -- Table structure for table `user_master`
 --
 
-DROP TABLE IF EXISTS `user_master`;
 CREATE TABLE IF NOT EXISTS `user_master` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_name` varchar(255) NOT NULL,
