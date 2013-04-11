@@ -1,0 +1,14 @@
+extends layout
+
+block head
+  title= title
+  script(src='/javascripts/home.js')
+block content
+  form(method='post', id='homeForm', action='http://localhost:2000/home')
+    div(id='dialog', title='error', style='display:none;')
+      p(id='homeWarn') You need to supply a valid email
+    div(id='NewDetailsArea')
+      p Enter your email address, and then click enter 
+      | <input type='text' id='email' name='email' class='email'></input>
+      div#homeSubmit
+        input(type='submit', value='Enter', id='enterEmail')

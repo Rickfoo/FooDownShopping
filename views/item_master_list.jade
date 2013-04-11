@@ -1,0 +1,32 @@
+extends layout
+block head
+    title= title
+block content
+  #item
+  div.items
+  table
+    tr
+      th Description
+      th Price
+      th Action
+    - for( var i = 0, len = items.length; i < len; i++ ) {
+    tr
+      td=items[i].item_desc
+      td=items[i].item_price
+      td.action
+        a(href='/shopping/item_master/update/' + items[i].item_id) <img src="/images/b_edit.png" title="Update" alt="Update" class="icon ic_b_insrow"> Update
+        a(href='/shopping/item_master/delete/' + items[i].item_id) <img src="/images/b_drop.png" title="Delete" alt="Delete" class="icon ic_b_insrow"> Delete
+        Delete
+    - }
+    select
+      - for( var i = 0, len = items.length; i < len; i++ ) {
+        option(value=items[i].item_id)=items[i].item_desc
+      - }
+block sidebar
+  .widget
+    h1 Menu
+    p
+      a(href='/shopping/item_master/add') Create
+    p
+      | Vivamus hendrerit arcu sed erat molestie
+      | vehicula.

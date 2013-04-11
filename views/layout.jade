@@ -1,9 +1,8 @@
 doctype 5
 html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-    //script(src='lib/jquery/jquery-1.7.1.min.js')
+  link(rel='stylesheet', href='/stylesheets/style.css')
+  script(src='/javascripts/jquery-1.8.2.min.js')
+  block head
   body
     header
       h1 Foo Down Shopping List
@@ -11,7 +10,7 @@ html
       a(href='index.html') Home
       a(href='/about/') About
       a(href='/shopping/') Shopping
-      a(href='/login/') Login
+      a(href='/shopping/item_master') Item Master
     .sidebar
         block sidebar
     .container

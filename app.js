@@ -9,8 +9,11 @@ var express = require('express')
   , http = require('http')
   , path = require('path');
 
+// Routing
+var itemMaster = require('./routes/item_master');
 var app = express();
 var ItemMasterProvider = require('./itemmasterprovider').ItemMasterProvider;
+
 //--------------------------------------------------------------------------
 //      EXPRESS SETUP
 //--------------------------------------------------------------------------
@@ -31,43 +34,74 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-// Error Handling
-function errorHandler(err, req, res, next) {
-  res.status(500);
-  res.render('error', { error: err });
-}
-
 // Initialize the micropostProvider
 var itemMasterProvider = new ItemMasterProvider();
 
-//--------------------------------------------------------------------------
-//      ROUTING
-//--------------------------------------------------------------------------
+var io = require('socket.io').listen(http.createServer(app));
+//=============================================================================
+//    SOCKETS CREATION
+//=============================================================================
+io.sockets.on('connection', function (socket) {
 
-app.get('/', function(req, res){
- itemMasterProvider.findAll(function(error, docs){
-    res.render('index.jade',{ title: 'Item Master', items:docs});
-  })
+    socket.on('addNewPersonMessage', function (data) {
+        // console.log("addNewPersonMessage recieved person (email:'" + data.email + "')");
+
+        // personProvider.save({
+        //     email: data.email
+        // }, function (error, docs) {
+        //     if(error == null) {
+        //         console.log('Sucessfully saved new person');
+        //         console.log(docs[0]);
+        //         io.sockets.emit('newPersonCallback', { _id: docs[0]._id, email: docs[0].email });
+        //     } 
+        // });
+    });
+
+
+    socket.on('addNewLinkMessage', function (data) {
+        // console.log("addNewLinkMessage recieved link (source:'" + data.source + "', target:'" + data.target + "')");
+        // linkProvider.save({
+        //     source: data.source,
+        //     target: data.target
+        //  }, function (error, docs) {
+        //     if(error == null) {
+        //         console.log('Sucessfully saved new link');
+        //         console.log(docs[0]);
+        //         io.sockets.emit('newLinkCallback', { _id: docs[0]._id, source: docs[0].source, target: docs[0].target });
+        //     } 
+        // });
+    });
 });
 
+//=============================================================================
+//      ROUTING HOME
+//=============================================================================
+
+app.get('/', function(req, res){
+    res.render('login.jade',{ title: 'Login'});
+});
+
+//=============================================================================
+//      ROUTING ITEM MASTER
+//=============================================================================
+
+app.get('/shopping/item_master', function(req, res){
+  itemMaster.getHomeItemMaster(req,res,itemMasterProvider);
+});
 // Get the Item Master
 app.get('/shopping/item_master/add', function(req, res) {
-    res.render('item_master_create.jade', { 
-        title: 'New Item Master'});
+   itemMaster.getAddItemMaster(req,res);
 });
 
 // Update the Item Mster
 app.get('/shopping/item_master/update/:id', function(req, res) {
-  itemMasterProvider.findById(req.params.id,function(error, docs){
-    res.render('item_master_update.jade',{ title:'Update Item Master', items:docs});
-  })
+  itemMaster.getUpdateItemMaster(req,res,itemMasterProvider);
 });
 
 // Delete the Item Mster
 app.get('/shopping/item_master/delete/:id', function(req, res) {
-  itemMasterProvider.delete(req.params.id,function(error){
-    res.redirect('/');
-  })
+  itemMaster.getDeleteItemMaster(req,res,itemMasterProvider);
+
 });
 
 //---------------------------------------------------
@@ -75,24 +109,12 @@ app.get('/shopping/item_master/delete/:id', function(req, res) {
 //---------------------------------------------------
 // Create an Item Master
 app.post('/shopping/item_master/add', function(req, res){
-    itemMasterProvider.insert({
-        description: req.param('description'),
-        aisle: req.param('aisle'),
-        price: req.param('price'),
-    }, function( error, docs) {
-        res.redirect('/')
-    });
+    itemMaster.postAddItemMaster(req,res,itemMasterProvider);
 });
 
 // Update an Item Master
 app.post('/shopping/item_master/save', function(req, res){
-    itemMasterProvider.update(req.param('item_id'),{
-        description: req.param('description'),
-        aisle: req.param('aisle'),
-        price: req.param('price'),
-    }, function( error, docs) {
-        res.redirect('/')
-    });
+    itemMaster.postSaveItemMaster(req,res,itemMasterProvider);
 });
 
 http.createServer(app).listen(app.get('port'), function(){
