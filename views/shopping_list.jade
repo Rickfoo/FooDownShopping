@@ -1,0 +1,28 @@
+extends layout
+block head
+    title= title
+block content
+  #item
+  div.items
+  table
+    tr
+      th Item Description
+      th Entry Date
+      th Action
+    - for( var i = 0, len = lists.length; i < len; i++ ) {
+    tr
+      td=lists[i].item_desc
+      td=lists[i].entry_date
+      td.action
+        a(href='/shopping/shopping_list/update/' + lists[i].shopping_id) <img src="/images/b_edit.png" title="Update" alt="Update" class="icon ic_b_insrow"> Update
+        a(href='/shopping/shopping_list/delete/' + lists[i].shopping_id) <img src="/images/b_drop.png" title="Delete" alt="Delete" class="icon ic_b_insrow"> Delete
+        Delete
+    - }
+block sidebar
+  .widget
+    h1 Menu
+    p
+      a(href='/shopping/shopping_list/add') Create
+    p
+      | Vivamus hendrerit arcu sed erat molestie
+      | vehicula.

@@ -1,0 +1,22 @@
+extend layout
+block head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src='javascripts/jquery-1.7.1.min.js')
+block content
+    div
+      form( method="post", action="/shopping/item_master/add")
+        div
+          span Description:
+          input( type="text", name="description", id="description")
+        div
+          span Aisle :
+          input( type="text",name="aisle", id="aisle")
+        div
+          span Price :
+          input( type="text",name="price", id="price")
+         div
+          span Photo :
+          input( type="text",name="photo", id="photo")
+        div#addItemMasterSubmit
+          input(type="submit", value="Save")
