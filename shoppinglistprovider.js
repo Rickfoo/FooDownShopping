@@ -12,13 +12,14 @@ var pool = mysql.createPool({
 ShoppingListProvider = function(){
 };
 
-// Function to find all the item master
+// Function to find all the shopping
 ShoppingListProvider.prototype.findAll = function(callback){
 	pool.getConnection(function(err, connection) {
 		// Use the connection
-		connection.query( 'SELECT * FROM shopping_list', function(err, rows) {
+		connection.query( 'SELECT * from v_shopping_list', function(err, rows, fields) {
 			if (err) callback(err);
 			else {
+				console.log(fields);
 				callback(null,rows);
 				connection.end();				
 			}

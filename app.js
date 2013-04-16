@@ -9,16 +9,19 @@ var express = require('express')
   , http = require('http')
   , path = require('path');
 
-// Routing
+// Routing initialization
 var itemMaster = require('./routes/item_master');
+var shoppingList = require('./routes/shopping_list');
+// Modules initialization
 var app = express();
 var ItemMasterProvider = require('./itemmasterprovider').ItemMasterProvider;
+var ShoppingListProvider = require('./shoppinglistprovider').ShoppingListProvider;
 
 //--------------------------------------------------------------------------
 //      EXPRESS SETUP
 //--------------------------------------------------------------------------
 app.configure(function(){
-  app.set('port', process.env.PORT || 3000);
+  app.set('port', process.env.PORT || 3100);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(express.favicon());
@@ -28,14 +31,20 @@ app.configure(function(){
   app.use(app.router);
   app.use(require('stylus').middleware(__dirname + '/public'));
   app.use(express.static(path.join(__dirname, 'public')));
+  app.use(function(err, req, res, next){
+     res.status(err.status || 500);
+     res.render('error', { error: err });
+  });
 });
 
 app.configure('development', function(){
+  //app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
   app.use(express.errorHandler());
 });
 
 // Initialize the micropostProvider
 var itemMasterProvider = new ItemMasterProvider();
+var shoppingListProvider = new ShoppingListProvider();
 
 var io = require('socket.io').listen(http.createServer(app));
 //=============================================================================
@@ -80,6 +89,39 @@ io.sockets.on('connection', function (socket) {
 app.get('/', function(req, res){
     res.render('login.jade',{ title: 'Login'});
 });
+
+//=============================================================================
+//      ROUTING SHOPPING LIST
+//=============================================================================
+
+app.get('/shopping/shopping_list', function(req, res){
+  shoppingList.getHomeShoppingList(req,res,shoppingListProvider);
+});
+
+// Get the Item Master
+app.get('/shopping/shopping_list/add', function(req, res) {
+   itemMaster.getAddItemMaster(req,res);
+});
+
+// Update the Item Mster
+app.get('/shopping/shopping_list/update/:id', function(req, res) {
+  itemMaster.getUpdateItemMaster(req,res,itemMasterProvider);
+});
+
+
+//---------------------------------------------------
+//    POST - UPDATE/ADD SHOPPING LIST
+//---------------------------------------------------
+// Create a shopping list item
+app.post('/shopping/shopping_list/add', function(req, res){
+    shoppingList.postAddShoppingList(req,res,shoppingListProvider);
+});
+
+// Update a shopping list item
+app.post('/shopping/shopping_list/save', function(req, res){
+    shoppingList.postSaveShoppingList(req,res,shoppingListProvider);
+});
+
 
 //=============================================================================
 //      ROUTING ITEM MASTER
